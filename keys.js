@@ -4,8 +4,8 @@ console.log("keys are loaded my dude");
 
 //Twitter API keys
 exports.twitterKeys = {
-    consumer_key: '<input here>',
-    consumer_secret: '<input here>',
-    access_token_key: '<input here>',
-    access_token_secret: '<input here>',
-}
+    consumer_key: 'DZFXiwBsA2VXiEolWq8VvUNXi',
+    consumer_secret: 'pprcR0e9A9uv5Zy0ptSqZxrkI6LZiClCQcYwmrJhmH6fZNRHni',
+    access_token_key: '900387772367724544-3kpESm9qfPmQuHZMGCAXMh1OAc1RAuv',
+    access_token_secret: '\tgUWLS8laYPeHDwVLAIopN7tlM1LfAPixkHvvzkaSXj9pf\n'
+};
