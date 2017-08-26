@@ -1,6 +1,9 @@
 
 var jQuery = require("jquery");
 var ajax = require("ajax");
+var request = require("request");
+
+
 //Stores twitter keys from keys.js into a variable
 
 //Require keys.js
@@ -27,8 +30,25 @@ var fs = require("fs");
 
 //Stores command line command in command var
 var command = process.argv[2];
+var searchTerm = process.argv[3];
+
+var randText;
+
 
 function userInput() {
+    if (command === "do-what-it-says") {
+        var randText;
+        fs.readFile('./random.txt', "UTF8", function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            randText = data.split(",");
+            command = randText[0];
+            searchTerm = randText[1];
+            userInput();
+        });
+    }
+
+
     if (command === "my-tweets") {
         console.log("Your 20 most recent tweets:");
 
@@ -45,14 +65,14 @@ function userInput() {
     }
     else if (command === "spotify-this-song") {
 
-        var songTitle = process.argv[3];
 
-        if(songTitle===""){
-            songTitle = "The Sign";
+
+        if(searchTerm===""){
+            searchTerm = "The Sign";
         }
 
 
-        spotify.search({ type: 'track', query: songTitle }, function(err, data) {
+        spotify.search({ type: 'track', query: searchTerm }, function(err, data) {
             if (err) {
                 return console.log('Error occurred: ' + err);
             }
@@ -74,18 +94,32 @@ function userInput() {
         });
     }
     else if (command === "movie-this") {
-        console.log("Movie Info:");
+
+        searchTerm.split("").join("+");
+        //    scrape OMDb
+        request("http://www.omdbapi.com/?t=" + searchTerm + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+
+
+            console.log("----------------------------");
+            console.log("Movie Info:");
+            console.log("- - - - - - - - - - - \n");
+            //scrape for each individual part of the website, and console.log
+            console.log("Title        :" + JSON.parse(body).Title + "\n");
+            console.log("Year         : " + JSON.parse(body).Year);
+            console.log("IMDB Rating  : " + JSON.parse(body).imdbRating);
+            console.log("RT Rating    : " + JSON.parse(body).Ratings[1].Value);
+            console.log("Country      : " + JSON.parse(body).Country);
+            console.log("Language     : " + JSON.parse(body).Language);
+            console.log("Movie Plot   : " + JSON.parse(body).Plot);
+            console.log("Actors       : " + JSON.parse(body).Actors + "\n");
+            console.log("----------------------------");
+
+        });
+
+
 
     }
-    else if (command === "do-what-it-says") {
-        var randText;
-        fs.readFile('./random.txt', function (err, data) {
-            if (err) throw err;
-            console.log(data);
-            randText = JSON.stringify(data);
-            console.log("The command from random.txt was: " + randText);
-        });
-    }
+
     else {
         console.log("The command you entered was not understood. Please Enter one of the following commands:");
         console.log("--> my-tweets : Displays the last 20 tweets you have posted");
